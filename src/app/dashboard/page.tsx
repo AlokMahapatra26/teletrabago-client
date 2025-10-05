@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
 import { useAuth } from '@/hooks/useAuth';
 import { TaskBoard } from '@/components/tasks/TaskBoard';
+import { CompanyChat } from '@/components/chat/CompanyChat';
 import { CreateCompanyDialog } from '@/components/company/CreateCompanyDialog';
 import { CompanySelector } from '@/components/company/CompanySelector';
 import { AddMemberDialog } from '@/components/company/AddMemberDialog';
@@ -12,7 +13,9 @@ import { MembersList } from '@/components/company/MembersList';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { apiRequest } from '@/lib/api';
+import { LayoutDashboard, MessageSquare, Users } from 'lucide-react';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -24,16 +27,11 @@ export default function DashboardPage() {
   const [memberRefreshTrigger, setMemberRefreshTrigger] = useState(0);
 
   useEffect(() => {
-    // Wait for hydration to complete
     if (isLoading) return;
-
-    // After hydration, check if user is authenticated
     if (!isAuthenticated) {
       router.push('/signin');
       return;
     }
-
-    // User is authenticated, fetch companies
     fetchCompanies();
   }, [isAuthenticated, isLoading]);
 
@@ -70,38 +68,31 @@ export default function DashboardPage() {
     setMemberRefreshTrigger((prev) => prev + 1);
   };
 
-  // Show loading state while hydrating
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <div className="inline-block h-8 w-8 animate-spin border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></div>
+          <div className="inline-block h-8 w-8 animate-spin border-4 border-solid border-current border-r-transparent"></div>
           <p className="mt-2 text-muted-foreground">Loading...</p>
         </div>
       </div>
     );
   }
 
-  // Don't render anything if not authenticated (will redirect)
   if (!isAuthenticated) {
     return null;
   }
 
-  // Show loading state while fetching companies
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <div className="inline-block h-8 w-8 animate-spin border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></div>
+          <div className="inline-block h-8 w-8 animate-spin border-4 border-solid border-current border-r-transparent"></div>
           <p className="mt-2 text-muted-foreground">Loading companies...</p>
         </div>
       </div>
     );
   }
-
-  const selectedCompanyData = companies.find(
-    (c) => c.companies.id === selectedCompany
-  );
 
   return (
     <div className="min-h-screen">
@@ -133,7 +124,7 @@ export default function DashboardPage() {
           </Card>
         ) : (
           <div className="space-y-6">
-            {/* Company Selection and Management */}
+            {/* Company Selection */}
             <Card className="p-4">
               <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
                 <div className="flex items-center gap-4 flex-wrap">
@@ -170,15 +161,28 @@ export default function DashboardPage() {
               )}
             </Card>
 
-            {/* Task Board */}
-            {selectedCompany ? (
-              <TaskBoard companyId={selectedCompany} />
-            ) : (
-              <Card className="p-8 text-center">
-                <p className="text-muted-foreground">
-                  Select a company to view tasks
-                </p>
-              </Card>
+            {/* Tabs for Tasks and Chat */}
+            {selectedCompany && (
+              <Tabs defaultValue="tasks" className="space-y-4">
+                <TabsList className="grid w-full max-w-md grid-cols-2">
+                  <TabsTrigger value="tasks" className="gap-2">
+                    <LayoutDashboard className="h-4 w-4" />
+                    Tasks
+                  </TabsTrigger>
+                  <TabsTrigger value="chat" className="gap-2">
+                    <MessageSquare className="h-4 w-4" />
+                    Chat
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="tasks">
+                  <TaskBoard companyId={selectedCompany} />
+                </TabsContent>
+
+                <TabsContent value="chat">
+                  <CompanyChat companyId={selectedCompany} />
+                </TabsContent>
+              </Tabs>
             )}
           </div>
         )}
