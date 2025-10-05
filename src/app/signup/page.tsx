@@ -2,11 +2,12 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { SignupForm } from '@/components/auth/SignupForm';
+import { Card } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
+import Link from 'next/link';
 
-export default function Home() {
+export default function SignupPage() {
   const router = useRouter();
   const { isAuthenticated, isLoading } = useAuth();
 
@@ -21,7 +22,6 @@ export default function Home() {
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <div className="inline-block h-8 w-8 animate-spin border-4 border-solid border-current border-r-transparent"></div>
-          <p className="mt-2 text-muted-foreground">Loading...</p>
         </div>
       </div>
     );
@@ -32,21 +32,17 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <div className="text-center space-y-6">
-        <h1 className="text-4xl font-bold">Remote Work Platform</h1>
-        <p className="text-muted-foreground">
-          Collaborate with your team remotely
+    <div className="flex min-h-screen items-center justify-center p-4">
+      <Card className="w-full max-w-md p-6">
+        <h1 className="text-2xl font-bold mb-6">Create an account</h1>
+        <SignupForm />
+        <p className="text-sm text-muted-foreground mt-4">
+          Already have an account?{' '}
+          <Link href="/signin" className="underline">
+            Sign in
+          </Link>
         </p>
-        <div className="flex gap-4 justify-center">
-          <Link href="/signin">
-            <Button>Sign In</Button>
-          </Link>
-          <Link href="/signup">
-            <Button variant="outline">Sign Up</Button>
-          </Link>
-        </div>
-      </div>
-    </main>
+      </Card>
+    </div>
   );
 }
