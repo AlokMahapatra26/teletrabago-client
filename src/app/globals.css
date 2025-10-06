@@ -266,3 +266,18 @@
   user-select: none;
   white-space: nowrap;
 }
+
+
+/* tldraw Styles - Flat design with no shadows */
+.tl-container * {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.tl-button,
+.tl-menu,
+.tl-popover,
+.tl-dialog {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}

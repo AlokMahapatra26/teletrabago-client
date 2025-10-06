@@ -19,7 +19,9 @@ import { LayoutDashboard, MessageSquare, Users } from 'lucide-react';
 import { DocumentsList } from '@/components/documents/DocumentsList';
 import { DocumentEditor } from '@/components/documents/DocumentEditor';
 import { FileText } from 'lucide-react';
-
+import { WhiteboardsList } from '@/components/whiteboard/WhiteboardList';
+import { WhiteboardEditor } from '@/components/whiteboard/WhiteboardEditor';
+import { PenTool } from 'lucide-react';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -30,6 +32,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [memberRefreshTrigger, setMemberRefreshTrigger] = useState(0);
   const [selectedDocument, setSelectedDocument] = useState<any>(null);
+  const [selectedWhiteboard, setSelectedWhiteboard] = useState<any>(null);
 
   useEffect(() => {
     if (isLoading) return;
@@ -170,18 +173,22 @@ export default function DashboardPage() {
             {selectedCompany && (
               <Tabs defaultValue="tasks" className="space-y-4">
                 {/* --- Tab Buttons --- */}
-                <TabsList className="grid w-full max-w-2xl grid-cols-3">
-                  <TabsTrigger value="tasks" className="gap-2">
+                <TabsList className="grid w-full max-w-2xl grid-cols-2 md:grid-cols-4">
+                  <TabsTrigger value="tasks" className="flex-1 justify-center gap-2">
                     <LayoutDashboard className="h-4 w-4" />
                     Tasks
                   </TabsTrigger>
-                  <TabsTrigger value="chat" className="gap-2">
+                  <TabsTrigger value="chat" className="flex-1 justify-center gap-2">
                     <MessageSquare className="h-4 w-4" />
                     Chat
                   </TabsTrigger>
-                  <TabsTrigger value="documents" className="gap-2">
+                  <TabsTrigger value="documents" className="flex-1 justify-center gap-2">
                     <FileText className="h-4 w-4" />
                     Documents
+                  </TabsTrigger>
+                  <TabsTrigger value="whiteboards" className="flex-1 justify-center gap-2">
+                    <PenTool className="h-4 w-4" />
+                    Whiteboards
                   </TabsTrigger>
                 </TabsList>
 
@@ -225,8 +232,40 @@ export default function DashboardPage() {
                     </div>
                   </div>
                 </TabsContent>
+
+                {/* --- Whiteboards --- */}
+                <TabsContent value="whiteboards">
+                  <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                    <div className="lg:col-span-1">
+                      <WhiteboardsList
+                        companyId={selectedCompany}
+                        onSelectWhiteboard={setSelectedWhiteboard}
+                        selectedWhiteboardId={selectedWhiteboard?.id}
+                      />
+                    </div>
+
+                    <div className="lg:col-span-3">
+                      {selectedWhiteboard ? (
+                        <WhiteboardEditor
+                          whiteboard={selectedWhiteboard}
+                          onTitleChange={(title) =>
+                            setSelectedWhiteboard({ ...selectedWhiteboard, title })
+                          }
+                        />
+                      ) : (
+                        <Card className="p-8 text-center">
+                          <PenTool className="h-12 w-12 mx-auto mb-2 text-muted-foreground" />
+                          <p className="text-muted-foreground">
+                            Select a whiteboard or create a new one
+                          </p>
+                        </Card>
+                      )}
+                    </div>
+                  </div>
+                </TabsContent>
               </Tabs>
             )}
+
 
           </div>
         )}
