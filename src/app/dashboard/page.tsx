@@ -22,6 +22,9 @@ import { FileText } from 'lucide-react';
 import { WhiteboardsList } from '@/components/whiteboard/WhiteboardList';
 import { WhiteboardEditor } from '@/components/whiteboard/WhiteboardEditor';
 import { PenTool } from 'lucide-react';
+import { CreateMeetingDialog } from '@/components/meetings/CreateMeetingDialog';
+import { MeetingsList } from '@/components/meetings/MeetingsList';
+import { Video } from 'lucide-react';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -33,6 +36,7 @@ export default function DashboardPage() {
   const [memberRefreshTrigger, setMemberRefreshTrigger] = useState(0);
   const [selectedDocument, setSelectedDocument] = useState<any>(null);
   const [selectedWhiteboard, setSelectedWhiteboard] = useState<any>(null);
+  const [meetingRefreshTrigger, setMeetingRefreshTrigger] = useState(0);
 
   useEffect(() => {
     if (isLoading) return;
@@ -173,22 +177,30 @@ export default function DashboardPage() {
             {selectedCompany && (
               <Tabs defaultValue="tasks" className="space-y-4">
                 {/* --- Tab Buttons --- */}
-                <TabsList className="grid w-full max-w-2xl grid-cols-2 md:grid-cols-4">
-                  <TabsTrigger value="tasks" className="flex-1 justify-center gap-2">
+                <TabsList className="grid w-full max-w-3xl grid-cols-5 mx-auto">
+                  <TabsTrigger value="tasks" className="flex items-center justify-center gap-2">
                     <LayoutDashboard className="h-4 w-4" />
                     Tasks
                   </TabsTrigger>
-                  <TabsTrigger value="chat" className="flex-1 justify-center gap-2">
+
+                  <TabsTrigger value="chat" className="flex items-center justify-center gap-2">
                     <MessageSquare className="h-4 w-4" />
                     Chat
                   </TabsTrigger>
-                  <TabsTrigger value="documents" className="flex-1 justify-center gap-2">
+
+                  <TabsTrigger value="documents" className="flex items-center justify-center gap-2">
                     <FileText className="h-4 w-4" />
                     Documents
                   </TabsTrigger>
-                  <TabsTrigger value="whiteboards" className="flex-1 justify-center gap-2">
+
+                  <TabsTrigger value="whiteboards" className="flex items-center justify-center gap-2">
                     <PenTool className="h-4 w-4" />
                     Whiteboards
+                  </TabsTrigger>
+
+                  <TabsTrigger value="meetings" className="flex items-center justify-center gap-2">
+                    <Video className="h-4 w-4" />
+                    Meetings
                   </TabsTrigger>
                 </TabsList>
 
@@ -263,8 +275,29 @@ export default function DashboardPage() {
                     </div>
                   </div>
                 </TabsContent>
+
+                {/* --- Meetings --- */}
+                <TabsContent value="meetings">
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <h2 className="text-2xl font-bold">Meetings</h2>
+                      <CreateMeetingDialog
+                        companyId={selectedCompany}
+                        onMeetingCreated={() =>
+                          setMeetingRefreshTrigger((prev) => prev + 1)
+                        }
+                      />
+                    </div>
+
+                    <MeetingsList
+                      companyId={selectedCompany}
+                      refreshTrigger={meetingRefreshTrigger}
+                    />
+                  </div>
+                </TabsContent>
               </Tabs>
             )}
+
 
 
           </div>
