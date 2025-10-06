@@ -113,7 +113,7 @@ export default function DashboardPage() {
         <div className="max-w-7xl mx-auto px-8 py-4">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-bold">Remote Work Platform</h1>
+              <h1 className="text-2xl font-bold">Teletrabago</h1>
               <p className="text-sm text-muted-foreground">
                 Welcome, {user?.full_name || user?.email}
               </p>
