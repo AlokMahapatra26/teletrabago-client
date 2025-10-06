@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -40,40 +41,61 @@ export function SignupForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <Label htmlFor="full_name">Full Name</Label>
+    <form onSubmit={handleSubmit} className="space-y-8">
+      <div className="space-y-3">
+        <Label htmlFor="full_name" className="text-base font-medium">
+          Full Name
+        </Label>
         <Input
           id="full_name"
           name="full_name"
           type="text"
+          placeholder="John Doe"
           required
-          className="mt-1"
+          className="h-14 text-base bg-white/80 backdrop-blur border-gray-300 focus:border-black focus:ring-2 focus:ring-black transition-all"
         />
       </div>
-      <div>
-        <Label htmlFor="email">Email</Label>
+
+      <div className="space-y-3">
+        <Label htmlFor="email" className="text-base font-medium">
+          Email address
+        </Label>
         <Input
           id="email"
           name="email"
           type="email"
+          placeholder="you@example.com"
           required
-          className="mt-1"
+          className="h-14 text-base bg-white/80 backdrop-blur border-gray-300 focus:border-black focus:ring-2 focus:ring-black transition-all"
         />
       </div>
-      <div>
-        <Label htmlFor="password">Password</Label>
+
+      <div className="space-y-3">
+        <Label htmlFor="password" className="text-base font-medium">
+          Password
+        </Label>
         <Input
           id="password"
           name="password"
           type="password"
+          placeholder="Create a strong password"
           required
-          className="mt-1"
+          className="h-14 text-base bg-white/80 backdrop-blur border-gray-300 focus:border-black focus:ring-2 focus:ring-black transition-all"
         />
       </div>
-      {error && <p className="text-sm text-destructive">{error}</p>}
-      <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? 'Creating account...' : 'Sign up'}
+
+      {error && (
+        <div className="p-4 bg-red-50 rounded-lg">
+          <p className="text-base text-red-600">{error}</p>
+        </div>
+      )}
+
+      <Button 
+        type="submit" 
+        className="w-full h-14 bg-black text-white hover:bg-gray-800 font-medium text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] mt-4" 
+        disabled={loading}
+      >
+        {loading ? 'Creating account...' : 'Create account'}
       </Button>
     </form>
   );

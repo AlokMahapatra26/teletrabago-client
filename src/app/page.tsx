@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
+import LandingPage from '@/components/landing-page/landingPage';
+import Loading from '@/components/loading/Loading';
 
 export default function Home() {
   const router = useRouter();
@@ -18,12 +20,7 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block h-8 w-8 animate-spin border-4 border-solid border-current border-r-transparent"></div>
-          <p className="mt-2 text-muted-foreground">Loading...</p>
-        </div>
-      </div>
+      <Loading/>
     );
   }
 
@@ -32,21 +29,6 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <div className="text-center space-y-6">
-        <h1 className="text-4xl font-bold">Remote Work Platform</h1>
-        <p className="text-muted-foreground">
-          Collaborate with your team remotely
-        </p>
-        <div className="flex gap-4 justify-center">
-          <Link href="/signin">
-            <Button>Sign In</Button>
-          </Link>
-          <Link href="/signup">
-            <Button variant="outline">Sign Up</Button>
-          </Link>
-        </div>
-      </div>
-    </main>
+    <LandingPage/>
   );
 }

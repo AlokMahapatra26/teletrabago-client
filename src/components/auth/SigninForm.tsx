@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -39,29 +40,54 @@ export function SigninForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <Label htmlFor="email">Email</Label>
+    <form onSubmit={handleSubmit} className="space-y-8">
+      <div className="space-y-3">
+        <Label htmlFor="email" className="text-base font-medium">
+          Email address
+        </Label>
         <Input
           id="email"
           name="email"
           type="email"
+          placeholder="you@example.com"
           required
-          className="mt-1"
+          className="h-14 text-base bg-white/80 backdrop-blur border-gray-300 focus:border-black focus:ring-2 focus:ring-black transition-all"
         />
       </div>
-      <div>
-        <Label htmlFor="password">Password</Label>
+
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <Label htmlFor="password" className="text-base font-medium">
+            Password
+          </Label>
+          <Link 
+            href="/forgot-password" 
+            className="text-sm text-gray-600 hover:text-black transition-colors"
+          >
+            Forgot password?
+          </Link>
+        </div>
         <Input
           id="password"
           name="password"
           type="password"
+          placeholder="Enter your password"
           required
-          className="mt-1"
+          className="h-14 text-base bg-white/80 backdrop-blur border-gray-300 focus:border-black focus:ring-2 focus:ring-black transition-all"
         />
       </div>
-      {error && <p className="text-sm text-destructive">{error}</p>}
-      <Button type="submit" className="w-full" disabled={loading}>
+
+      {error && (
+        <div className="p-4 bg-red-50 rounded-lg">
+          <p className="text-base text-red-600">{error}</p>
+        </div>
+      )}
+
+      <Button 
+        type="submit" 
+        className="w-full h-14 bg-black text-white hover:bg-gray-800 font-medium text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] mt-4" 
+        disabled={loading}
+      >
         {loading ? 'Signing in...' : 'Sign in'}
       </Button>
     </form>

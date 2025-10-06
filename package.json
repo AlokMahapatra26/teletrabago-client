@@ -44,6 +44,7 @@
     "react-hook-form": "^7.64.0",
     "socket.io-client": "^4.8.1",
     "sonner": "^2.0.7",
+    "svg-dotted-map": "^2.0.1",
     "tailwind-merge": "^3.3.1",
     "tldraw": "^4.0.3",
     "y-websocket": "^3.0.0",
