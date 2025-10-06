@@ -53,16 +53,23 @@ export function CollaborativeCanvas({ whiteboardId }: CollaborativeCanvasProps) 
   const [connectedUsers, setConnectedUsers] = useState(0);
   const [connectionStatus, setConnectionStatus] = useState<'connected' | 'disconnected'>('disconnected');
   const user = useAuthStore((state) => state.user);
-  const userColor = useRef('#' + Math.floor(Math.random()*16777215).toString(16));
+  const userColor = useRef('#' + Math.floor(Math.random() * 16777215).toString(16));
   const localClientId = useRef<number | null>(null);
 
   useEffect(() => {
     console.log('=== Initializing Canvas Yjs ===');
 
+    const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:5000';
+    console.log('WebSocket URL:', WS_URL);
+
     const wsProvider = new WebsocketProvider(
-      'ws://localhost:5000',
+      WS_URL,
       `whiteboards/${whiteboardId}`,
-      yDoc
+      yDoc,
+      {
+        connect: true,
+        maxBackoffTime: 10000,
+      }
     );
 
     wsProvider.on('status', (event: any) => {
@@ -83,7 +90,7 @@ export function CollaborativeCanvas({ whiteboardId }: CollaborativeCanvasProps) 
     const updateRemoteUsers = () => {
       const states = wsProvider.awareness.getStates();
       const users = new Map<number, RemoteUser>();
-      
+
       states.forEach((state, clientId) => {
         if (clientId !== localClientId.current && state.user) {
           users.set(clientId, {
@@ -171,7 +178,7 @@ export function CollaborativeCanvas({ whiteboardId }: CollaborativeCanvasProps) 
           if (element.points && element.points.length === 2) {
             const start = element.points[0];
             const end = element.points[1];
-            
+
             ctx.beginPath();
             ctx.moveTo(start.x, start.y);
             ctx.lineTo(end.x, end.y);
@@ -224,7 +231,7 @@ export function CollaborativeCanvas({ whiteboardId }: CollaborativeCanvasProps) 
     const pos = getMousePos(e);
     setIsDrawing(true);
     setStartPoint(pos);
-    
+
     if (tool === 'pencil') {
       setCurrentPoints([pos]);
     } else if (tool === 'text') {
@@ -259,7 +266,7 @@ export function CollaborativeCanvas({ whiteboardId }: CollaborativeCanvasProps) 
 
     if (tool === 'pencil') {
       setCurrentPoints((prev) => [...prev, pos]);
-      
+
       ctx.strokeStyle = userColor.current;
       ctx.lineWidth = 3;
       ctx.lineCap = 'round';
@@ -439,7 +446,7 @@ export function CollaborativeCanvas({ whiteboardId }: CollaborativeCanvasProps) 
         >
           {Array.from(remoteUsers.values()).map((remoteUser) => {
             if (!remoteUser.cursor) return null;
-            
+
             return (
               <div
                 key={remoteUser.clientId}

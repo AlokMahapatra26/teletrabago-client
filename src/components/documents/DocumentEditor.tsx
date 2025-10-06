@@ -47,17 +47,20 @@ export function DocumentEditor({ document, onTitleChange }: DocumentEditorProps)
     console.log('User:', user?.email || 'Anonymous');
     
     const yDoc = new Y.Doc();
+    const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:5000';
+    console.log('WebSocket URL:', WS_URL);
     
-    // IMPORTANT: Use document.id as room name directly
     const wsProvider = new WebsocketProvider(
-      'ws://localhost:5000', // WebSocket URL
-      `documents/${document.id}`, // Room name
-      yDoc,
-      {
-        connect: true,
-      }
-    );
-
+    WS_URL,
+    `documents/${document.id}`,
+    yDoc,
+    {
+      connect: true,
+      // Add these options for better reliability
+      WebSocketPolyfill: typeof window !== 'undefined' ? window.WebSocket : undefined,
+      maxBackoffTime: 10000,
+    }
+  );
     // Debug: Log all WebSocket events
     wsProvider.on('status', (event: any) => {
       console.log('📡 WebSocket status:', event.status);
@@ -115,7 +118,7 @@ export function DocumentEditor({ document, onTitleChange }: DocumentEditorProps)
       wsProvider.destroy();
       yDoc.destroy();
     };
-  }, [document.id, isMounted, user]);
+  }, [document.id, isMounted, user ]);
 
   const handleSaveTitle = async () => {
     if (title === document.title) return;
