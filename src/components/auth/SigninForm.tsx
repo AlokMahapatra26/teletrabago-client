@@ -51,7 +51,7 @@ export function SigninForm() {
           type="email"
           placeholder="you@example.com"
           required
-          className="h-14 text-base bg-white/80 backdrop-blur border-gray-300 focus:border-black focus:ring-2 focus:ring-black transition-all"
+          className="h-14 text-base bg-background/80 backdrop-blur border-input focus:border-ring focus:ring-2 focus:ring-ring transition-all"
         />
       </div>
 
@@ -62,7 +62,7 @@ export function SigninForm() {
           </Label>
           <Link 
             href="/forgot-password" 
-            className="text-sm text-gray-600 hover:text-black transition-colors"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             Forgot password?
           </Link>
@@ -73,19 +73,19 @@ export function SigninForm() {
           type="password"
           placeholder="Enter your password"
           required
-          className="h-14 text-base bg-white/80 backdrop-blur border-gray-300 focus:border-black focus:ring-2 focus:ring-black transition-all"
+          className="h-14 text-base bg-background/80 backdrop-blur border-input focus:border-ring focus:ring-2 focus:ring-ring transition-all"
         />
       </div>
 
       {error && (
-        <div className="p-4 bg-red-50 rounded-lg">
-          <p className="text-base text-red-600">{error}</p>
+        <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+          <p className="text-base text-destructive">{error}</p>
         </div>
       )}
 
       <Button 
         type="submit" 
-        className="w-full h-14 bg-black text-white hover:bg-gray-800 font-medium text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] mt-4" 
+        className="w-full h-14 bg-foreground text-background hover:bg-foreground/90 font-medium text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] mt-4" 
         disabled={loading}
       >
         {loading ? 'Signing in...' : 'Sign in'}
