@@ -103,7 +103,7 @@ export function VideoCallRoom({ roomName, onLeave }: VideoCallRoomProps) {
         setLocalStream(stream);
         if (localVideoRef.current) localVideoRef.current.srcObject = stream;
 
-        const newSocket = io(process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000', {
+        const newSocket = io(process.env.NEXT_PUBLIC_WS_URL ?? 'http://localhost:5000', {
           path: '/socket.io',
         });
         setSocket(newSocket);
