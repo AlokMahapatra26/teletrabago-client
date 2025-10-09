@@ -10,21 +10,25 @@ import { CreateCompanyDialog } from '@/components/company/CreateCompanyDialog';
 import { CompanySelector } from '@/components/company/CompanySelector';
 import { AddMemberDialog } from '@/components/company/AddMemberDialog';
 import { MembersList } from '@/components/company/MembersList';
+import { DeleteCompanyDialog } from '@/components/company/DeleteCompanyDialog';  // Add this
+import { DocumentsList } from '@/components/documents/DocumentsList';
+import { DocumentEditor } from '@/components/documents/DocumentEditor';
+import { WhiteboardsList } from '@/components/whiteboard/WhiteboardList';
+import { WhiteboardEditor } from '@/components/whiteboard/WhiteboardEditor';
+import { CreateMeetingDialog } from '@/components/meetings/CreateMeetingDialog';
+import { MeetingsList } from '@/components/meetings/MeetingsList';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { apiRequest } from '@/lib/api';
-import { LayoutDashboard, MessageSquare, Users } from 'lucide-react';
-import { DocumentsList } from '@/components/documents/DocumentsList';
-import { DocumentEditor } from '@/components/documents/DocumentEditor';
-import { FileText } from 'lucide-react';
-import { WhiteboardsList } from '@/components/whiteboard/WhiteboardList';
-import { WhiteboardEditor } from '@/components/whiteboard/WhiteboardEditor';
-import { PenTool } from 'lucide-react';
-import { CreateMeetingDialog } from '@/components/meetings/CreateMeetingDialog';
-import { MeetingsList } from '@/components/meetings/MeetingsList';
-import { Video } from 'lucide-react';
+import { 
+  LayoutDashboard, 
+  MessageSquare, 
+  FileText, 
+  PenTool, 
+  Video 
+} from 'lucide-react';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -32,6 +36,8 @@ export default function DashboardPage() {
   const clearAuth = useAuthStore((state) => state.clearAuth);
   const [companies, setCompanies] = useState<any[]>([]);
   const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
+  const [selectedCompanyName, setSelectedCompanyName] = useState<string>('');
+  const [userRole, setUserRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [memberRefreshTrigger, setMemberRefreshTrigger] = useState(0);
   const [selectedDocument, setSelectedDocument] = useState<any>(null);
@@ -47,17 +53,38 @@ export default function DashboardPage() {
     fetchCompanies();
   }, [isAuthenticated, isLoading]);
 
+  useEffect(() => {
+    if (selectedCompany) {
+      fetchUserRole();
+      const company = companies.find(c => c.companies.id === selectedCompany);
+      if (company) {
+        setSelectedCompanyName(company.companies.name);
+      }
+    }
+  }, [selectedCompany]);
+
   const fetchCompanies = async () => {
     try {
       const data = await apiRequest('/api/companies');
       setCompanies(data.companies || []);
       if (data.companies && data.companies.length > 0 && !selectedCompany) {
         setSelectedCompany(data.companies[0].companies.id);
+        setSelectedCompanyName(data.companies[0].companies.name);
       }
     } catch (error) {
       console.error('Failed to fetch companies:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchUserRole = async () => {
+    if (!selectedCompany) return;
+    try {
+      const data = await apiRequest(`/api/companies/${selectedCompany}/role`);
+      setUserRole(data.role);
+    } catch (error) {
+      console.error('Failed to fetch user role:', error);
     }
   };
 
@@ -74,6 +101,15 @@ export default function DashboardPage() {
 
   const handleCompanyCreated = () => {
     fetchCompanies();
+  };
+
+  const handleCompanyDeleted = () => {
+    // Refresh companies list
+    fetchCompanies();
+    // Reset selected company
+    setSelectedCompany(null);
+    setSelectedCompanyName('');
+    setUserRole(null);
   };
 
   const handleMemberAdded = () => {
@@ -113,7 +149,7 @@ export default function DashboardPage() {
         <div className="max-w-7xl mx-auto px-8 py-4">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-bold">Teletrabago</h1>
+              <h1 className="text-2xl font-bold">Remote Work Platform</h1>
               <p className="text-sm text-muted-foreground">
                 Welcome, {user?.full_name || user?.email}
               </p>
@@ -158,6 +194,16 @@ export default function DashboardPage() {
                       />
                     </div>
                   )}
+                  {selectedCompany && (
+                    <div className="mt-6">
+                      <DeleteCompanyDialog
+                        companyId={selectedCompany}
+                        companyName={selectedCompanyName}
+                        userRole={userRole}
+                        onCompanyDeleted={handleCompanyDeleted}
+                      />
+                    </div>
+                  )}
                 </div>
                 <CreateCompanyDialog onCompanyCreated={handleCompanyCreated} />
               </div>
@@ -173,48 +219,40 @@ export default function DashboardPage() {
               )}
             </Card>
 
-            {/* Tabs for Tasks and Chat */}
+            {/* Tabs for Tasks, Chat, Documents, Whiteboards, Meetings */}
             {selectedCompany && (
               <Tabs defaultValue="tasks" className="space-y-4">
-                {/* --- Tab Buttons --- */}
-                <TabsList className="grid w-full max-w-3xl grid-cols-5 mx-auto">
-                  <TabsTrigger value="tasks" className="flex items-center justify-center gap-2">
+                <TabsList className="grid w-full max-w-4xl grid-cols-5">
+                  <TabsTrigger value="tasks" className="gap-2">
                     <LayoutDashboard className="h-4 w-4" />
                     Tasks
                   </TabsTrigger>
-
-                  <TabsTrigger value="chat" className="flex items-center justify-center gap-2">
+                  <TabsTrigger value="chat" className="gap-2">
                     <MessageSquare className="h-4 w-4" />
                     Chat
                   </TabsTrigger>
-
-                  <TabsTrigger value="documents" className="flex items-center justify-center gap-2">
+                  <TabsTrigger value="documents" className="gap-2">
                     <FileText className="h-4 w-4" />
                     Documents
                   </TabsTrigger>
-
-                  <TabsTrigger value="whiteboards" className="flex items-center justify-center gap-2">
+                  <TabsTrigger value="whiteboards" className="gap-2">
                     <PenTool className="h-4 w-4" />
                     Whiteboards
                   </TabsTrigger>
-
-                  <TabsTrigger value="meetings" className="flex items-center justify-center gap-2">
+                  <TabsTrigger value="meetings" className="gap-2">
                     <Video className="h-4 w-4" />
                     Meetings
                   </TabsTrigger>
                 </TabsList>
 
-                {/* --- Tasks --- */}
                 <TabsContent value="tasks">
                   <TaskBoard companyId={selectedCompany} />
                 </TabsContent>
 
-                {/* --- Chat --- */}
                 <TabsContent value="chat">
                   <CompanyChat companyId={selectedCompany} />
                 </TabsContent>
 
-                {/* --- Documents --- */}
                 <TabsContent value="documents">
                   <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
                     <div className="lg:col-span-1">
@@ -224,14 +262,13 @@ export default function DashboardPage() {
                         selectedDocumentId={selectedDocument?.id}
                       />
                     </div>
-
                     <div className="lg:col-span-3">
                       {selectedDocument ? (
                         <DocumentEditor
                           document={selectedDocument}
-                          onTitleChange={(title) =>
-                            setSelectedDocument({ ...selectedDocument, title })
-                          }
+                          onTitleChange={(title) => {
+                            setSelectedDocument({ ...selectedDocument, title });
+                          }}
                         />
                       ) : (
                         <Card className="p-8 text-center">
@@ -245,7 +282,6 @@ export default function DashboardPage() {
                   </div>
                 </TabsContent>
 
-                {/* --- Whiteboards --- */}
                 <TabsContent value="whiteboards">
                   <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
                     <div className="lg:col-span-1">
@@ -255,14 +291,13 @@ export default function DashboardPage() {
                         selectedWhiteboardId={selectedWhiteboard?.id}
                       />
                     </div>
-
                     <div className="lg:col-span-3">
                       {selectedWhiteboard ? (
                         <WhiteboardEditor
                           whiteboard={selectedWhiteboard}
-                          onTitleChange={(title) =>
-                            setSelectedWhiteboard({ ...selectedWhiteboard, title })
-                          }
+                          onTitleChange={(title) => {
+                            setSelectedWhiteboard({ ...selectedWhiteboard, title });
+                          }}
                         />
                       ) : (
                         <Card className="p-8 text-center">
@@ -276,19 +311,15 @@ export default function DashboardPage() {
                   </div>
                 </TabsContent>
 
-                {/* --- Meetings --- */}
                 <TabsContent value="meetings">
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
                       <h2 className="text-2xl font-bold">Meetings</h2>
                       <CreateMeetingDialog
                         companyId={selectedCompany}
-                        onMeetingCreated={() =>
-                          setMeetingRefreshTrigger((prev) => prev + 1)
-                        }
+                        onMeetingCreated={() => setMeetingRefreshTrigger((prev) => prev + 1)}
                       />
                     </div>
-
                     <MeetingsList
                       companyId={selectedCompany}
                       refreshTrigger={meetingRefreshTrigger}
@@ -297,9 +328,6 @@ export default function DashboardPage() {
                 </TabsContent>
               </Tabs>
             )}
-
-
-
           </div>
         )}
       </div>
