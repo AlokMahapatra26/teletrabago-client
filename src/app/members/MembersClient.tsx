@@ -18,7 +18,7 @@ export default function MembersClient() {
   if (!companyId) {
     return (
       <div className="p-8 text-center text-muted-foreground">
-        No company selected. Please select a company first.
+        No company selected. Please select a company firstt.
         <div className="mt-4">
           <Button onClick={() => router.push('/')}>Go to Dashboard</Button>
         </div>
