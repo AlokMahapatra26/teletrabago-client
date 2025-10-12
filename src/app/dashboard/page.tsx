@@ -19,7 +19,6 @@ import { CreateMeetingDialog } from '@/components/meetings/CreateMeetingDialog';
 import { MeetingsList } from '@/components/meetings/MeetingsList';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { apiRequest } from '@/lib/api';
 import {
@@ -29,7 +28,6 @@ import {
   PenTool,
   Video,
   Users,
-  LogOut,
   LogOutIcon
 } from 'lucide-react';
 import { ModeToggle } from '@/components/mode-toggle';
@@ -68,20 +66,37 @@ export default function DashboardPage() {
     }
   }, [selectedCompany]);
 
-  const fetchCompanies = async () => {
+  async function fetchCompanies() {
     try {
       const data = await apiRequest('/api/companies');
-      setCompanies(data.companies || []);
-      if (data.companies && data.companies.length > 0 && !selectedCompany) {
-        setSelectedCompany(data.companies[0].companies.id);
-        setSelectedCompanyName(data.companies[0].companies.name);
+      const companies = data?.companies || [];
+      setCompanies(companies);
+
+      if (companies.length === 0) {
+        setSelectedCompany(null);
+        setSelectedCompanyName('');
+        return;
       }
-    } catch (error) {
-      console.error('Failed to fetch companies:', error);
-    } finally {
+
+      const storedCompanyId = localStorage.getItem('selectedCompanyId');
+      const matched = companies.find((c: { companies: { id: string | null; }; }) => c.companies.id === storedCompanyId);
+
+      if (storedCompanyId && matched) {
+        setSelectedCompany(storedCompanyId);
+        setSelectedCompanyName(matched.companies.name);
+      } else {
+        setSelectedCompany(companies[0].companies.id);
+        setSelectedCompanyName(companies[0].companies.name);
+      }
+    }
+    catch (error) {
+      console.error('Failed to fetch companies', error);
+    }
+    finally {
       setLoading(false);
     }
-  };
+  }
+
 
   const fetchUserRole = async () => {
     if (!selectedCompany) return;
@@ -118,6 +133,12 @@ export default function DashboardPage() {
   const handleMemberAdded = () => {
     setMemberRefreshTrigger((prev) => prev + 1);
   };
+
+  function handleSelectCompany(companyId: string) {
+    setSelectedCompany(companyId);
+    localStorage.setItem('selectedCompanyId', companyId);
+  }
+
 
   if (isLoading) {
     return (
@@ -161,7 +182,7 @@ export default function DashboardPage() {
             <div className='flex gap-2'>
               <ModeToggle />
               <Button variant="destructive" onClick={handleSignOut} className='cursor-pointer'>
-                <LogOutIcon/>
+                <LogOutIcon />
               </Button>
             </div>
 
@@ -191,8 +212,9 @@ export default function DashboardPage() {
                     <CompanySelector
                       companies={companies}
                       selectedCompany={selectedCompany}
-                      onSelectCompany={setSelectedCompany}
+                      onSelectCompany={handleSelectCompany}
                     />
+
                   </div>
                   {selectedCompany && (
                     <div className="mt-6">
@@ -200,7 +222,7 @@ export default function DashboardPage() {
                       <Link href={`/members?companyId=${selectedCompany}`}>
 
                         <Button size="sm" variant="outline" className="mt ml-4">
-                          <Users/>
+                          <Users />
                         </Button>
 
                       </Link>
