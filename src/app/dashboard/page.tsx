@@ -218,9 +218,7 @@ export default function DashboardPage() {
                   </div>
                   {selectedCompany && (
                     <div className="mt-6">
-                      <AddMemberDialog companyId={selectedCompany} 
-                      userRole={userRole}
-                      onMemberAdded={handleMemberAdded} />
+                      <AddMemberDialog companyId={selectedCompany} onMemberAdded={handleMemberAdded} />
                       <Link href={`/members?companyId=${selectedCompany}`}>
 
                         <Button size="sm" variant="outline" className="mt ml-4">
