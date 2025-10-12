@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css";
-import { ModeToggle } from "@/components/mode-toggle";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -30,7 +29,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <ModeToggle/>
+            
             {children}
           </ThemeProvider>
       </body>

@@ -29,6 +29,7 @@ import {
   PenTool, 
   Video 
 } from 'lucide-react';
+import { ModeToggle } from '@/components/mode-toggle';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -104,9 +105,7 @@ export default function DashboardPage() {
   };
 
   const handleCompanyDeleted = () => {
-    // Refresh companies list
     fetchCompanies();
-    // Reset selected company
     setSelectedCompany(null);
     setSelectedCompanyName('');
     setUserRole(null);
@@ -145,18 +144,23 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="border-b border-border bg-background">
+      <header className="border-b border-border bg-background ">
         <div className="max-w-7xl mx-auto px-8 py-4">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-bold">Remote Work Platform</h1>
+              
+              <h1 className="text-2xl font-bold">Teletrabago</h1>
               <p className="text-sm text-muted-foreground">
                 Welcome, {user?.full_name || user?.email}
               </p>
             </div>
-            <Button variant="outline" onClick={handleSignOut}>
+            <div className='flex gap-2'>
+              <ModeToggle/>
+              <Button variant="outline" onClick={handleSignOut}>
               Sign Out
             </Button>
+            </div>
+            
           </div>
         </div>
       </header>
