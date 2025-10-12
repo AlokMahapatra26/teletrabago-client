@@ -23,14 +23,20 @@ import { UserPlus } from 'lucide-react';
 
 interface AddMemberDialogProps {
   companyId: string;
+  userRole: string | null; // add userRole prop
   onMemberAdded: () => void;
 }
 
-export function AddMemberDialog({ companyId, onMemberAdded }: AddMemberDialogProps) {
+export function AddMemberDialog({ companyId, userRole, onMemberAdded }: AddMemberDialogProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [role, setRole] = useState('member');
+
+  // Only admins can add members
+  if (userRole !== 'owner') {
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -64,7 +70,7 @@ export function AddMemberDialog({ companyId, onMemberAdded }: AddMemberDialogPro
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className='cursor-pointer'>
+        <Button size="sm" className="cursor-pointer">
           <UserPlus className="h-4 w-4" />
         </Button>
       </DialogTrigger>
