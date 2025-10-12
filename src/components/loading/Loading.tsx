@@ -5,7 +5,7 @@ const Loading = () => {
     <div className="
       fixed inset-0 z-50                       
       flex justify-center items-center          
-      bg-white/60 backdrop-blur-sm              
+               
     ">
       
       {/* The Spinner */}

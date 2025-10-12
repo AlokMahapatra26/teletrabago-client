@@ -34,11 +34,11 @@ export default function SignupPage() {
   return (
     <main className="relative h-screen bg-background flex">
       {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/20 to-background" />
+      {/* <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/20 to-background" /> */}
 
       {/* Decorative Elements */}
-      <div className="absolute top-20 right-20 w-96 h-96 bg-muted/40 rounded-full blur-3xl opacity-40" />
-      <div className="absolute bottom-20 left-20 w-[500px] h-[500px] bg-muted/40 rounded-full blur-3xl opacity-40" />
+      {/* <div className="absolute top-20 right-20 w-96 h-96 bg-muted/40 rounded-full blur-3xl opacity-40" />
+      <div className="absolute bottom-20 left-20 w-[500px] h-[500px] bg-muted/40 rounded-full blur-3xl opacity-40" /> */}
 
       {/* Back to Home Link */}
       <Link 
@@ -49,10 +49,10 @@ export default function SignupPage() {
       </Link>
 
       {/* Left Side - Empty space with subtle shade */}
-      <div className="flex-1 relative bg-gradient-to-r from-muted/10 to-transparent" />
+      {/* <div className="flex-1 relative bg-gradient-to-r from-muted/10 to-transparent" /> */}
 
       {/* Right Side - Form Area with subtle background */}
-      <div className="flex-1 relative z-10 flex items-center justify-center bg-gradient-to-l from-muted/20 to-transparent px-20">
+      <div className="flex-1 relative z-10 flex items-center justify-center ">
         <div className="w-full max-w-xl space-y-12">
           {/* Header */}
           <div className="space-y-4">

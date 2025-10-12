@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Button } from '../ui/button'
+import { ModeToggle } from '../mode-toggle'
 
 const LandingPage = () => {
   return (
@@ -22,7 +23,8 @@ const LandingPage = () => {
               <h1 className="text-7xl md:text-8xl lg:text-9xl font-black tracking-tight mb-4">
                 Teletrabago
               </h1>
-              <div className="h-1.5 w-full bg-foreground" />
+              <ModeToggle/>
+              <div className="h-1.5 w-full bg-foreground mt-2" />
             </div>
             
             {/* Value Proposition */}
