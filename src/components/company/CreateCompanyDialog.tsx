@@ -51,7 +51,7 @@ export function CreateCompanyDialog({ onCompanyCreated }: CreateCompanyDialogPro
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className='mt-6 cursor-pointer'>
-          <Building/>
+          Create New Company
         </Button>
       </DialogTrigger>
       <DialogContent>

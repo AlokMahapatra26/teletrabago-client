@@ -34,20 +34,20 @@ const LandingPage = () => {
           </div>
 
           {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto py-12">
-            <div className="group p-8 border-2 border-border hover:bg-foreground hover:text-background transition-all duration-300 cursor-default">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto py-12 ">
+            <div className="group p-8 border-2 border-border transition-all duration-300 cursor-default rounded-4xl">
               <div className="text-4xl font-bold mb-3">01</div>
               <h3 className="text-lg font-semibold mb-2">Real-Time Meetings</h3>
               <p className="text-sm opacity-70">High-quality video calls with zero latency</p>
             </div>
             
-            <div className="group p-8 border-2 border-border hover:bg-foreground hover:text-background transition-all duration-300 cursor-default md:translate-y-8">
+            <div className="group p-8 border-2 border-border transition-all duration-300 cursor-default md:translate-y-8 rounded-4xl">
               <div className="text-4xl font-bold mb-3">02</div>
               <h3 className="text-lg font-semibold mb-2">Live Collaboration</h3>
               <p className="text-sm opacity-70">Edit documents and draw together instantly</p>
             </div>
             
-            <div className="group p-8 border-2 border-border hover:bg-foreground hover:text-background transition-all duration-300 cursor-default">
+            <div className="group p-8 border-2 border-border  transition-all duration-300 cursor-default rounded-4xl">
               <div className="text-4xl font-bold mb-3">03</div>
               <h3 className="text-lg font-semibold mb-2">Team Spaces</h3>
               <p className="text-sm opacity-70">Organize projects with dedicated workspaces</p>
@@ -60,7 +60,7 @@ const LandingPage = () => {
               <Link href="/signup">
                 <Button 
                   size="lg" 
-                  className="bg-foreground text-background hover:bg-foreground/90 px-12 py-7 text-lg font-semibold rounded-none border-2 border-foreground shadow-[8px_8px_0px_0px_hsl(var(--foreground))] hover:shadow-[4px_4px_0px_0px_hsl(var(--foreground))] transition-all duration-200"
+                  className="bg-foreground text-background hover:bg-foreground/90 px-12 py-7 text-lg font-semibold rounded-none border-2 border-foreground shadow-[8px_8px_0px_0px_hsl(var(--foreground))] hover:shadow-[4px_4px_0px_0px_hsl(var(--foreground))] transition-all duration-200 rounded-4xl"
                 >
                   Get Started Free
                 </Button>
@@ -70,7 +70,7 @@ const LandingPage = () => {
                 <Button 
                   variant="outline" 
                   size="lg"
-                  className="bg-background text-foreground border-2 border-border hover:bg-accent px-12 py-7 text-lg font-semibold rounded-none shadow-[8px_8px_0px_0px_hsl(var(--foreground))] hover:shadow-[4px_4px_0px_0px_hsl(var(--foreground))] transition-all duration-200"
+                  className="bg-background text-foreground border-2 border-border hover:bg-accent px-12 py-7 text-lg font-semibold rounded-none shadow-[8px_8px_0px_0px_hsl(var(--foreground))] hover:shadow-[4px_4px_0px_0px_hsl(var(--foreground))] transition-all duration-200 rounded-full"
                 >
                   Sign In
                 </Button>
@@ -78,7 +78,7 @@ const LandingPage = () => {
             </div>
             
             <p className="text-sm text-muted-foreground font-light">
-              No credit card required • Free forever plan available
+               100% Free Forever 
             </p>
           </div>
 
