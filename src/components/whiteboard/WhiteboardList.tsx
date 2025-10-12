@@ -102,7 +102,7 @@ export function WhiteboardsList({
     return (
       <Card className="p-4">
         <div className="flex items-center gap-2 text-muted-foreground">
-          <div className="h-4 w-4 animate-spin border-2 border-current border-r-transparent"></div>
+          <div className="h-4 w-4 animate-spin border-2 border-current border-r-transparent rounded-xl"></div>
           Loading whiteboards...
         </div>
       </Card>
@@ -116,8 +116,7 @@ export function WhiteboardsList({
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button size="sm">
-              <Plus className="h-4 w-4 mr-2" />
-              New Whiteboard
+              <Plus className="h-4 w-4" />
             </Button>
           </DialogTrigger>
           <DialogContent>

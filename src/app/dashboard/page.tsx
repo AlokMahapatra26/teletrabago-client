@@ -32,7 +32,7 @@ import {
 } from 'lucide-react';
 import { ModeToggle } from '@/components/mode-toggle';
 import Link from 'next/link';
-
+import SettingsDialogs from '@/components/settings/SettingsDialog';
 export default function DashboardPage() {
   const router = useRouter();
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -144,7 +144,7 @@ export default function DashboardPage() {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <div className="inline-block h-8 w-8 animate-spin border-4 border-solid border-current border-r-transparent"></div>
+          <div className="inline-block h-8 w-8 animate-spin border-4 border-solid border-current border-r-transparent rounded-xl"></div>
           <p className="mt-2 text-muted-foreground">Loading...</p>
         </div>
       </div>
@@ -159,7 +159,7 @@ export default function DashboardPage() {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <div className="inline-block h-8 w-8 animate-spin border-4 border-solid border-current border-r-transparent"></div>
+          <div className="inline-block h-8 w-8 animate-spin border-4 border-solid border-current border-r-transparent rounded-xl"></div>
           <p className="mt-2 text-muted-foreground">Loading companies...</p>
         </div>
       </div>
@@ -181,6 +181,7 @@ export default function DashboardPage() {
             </div>
             <div className='flex gap-2'>
               <ModeToggle />
+              {/* <SettingsDialogs/> */}
               <Button variant="destructive" onClick={handleSignOut} className='cursor-pointer'>
                 <LogOutIcon />
               </Button>

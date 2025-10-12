@@ -37,7 +37,7 @@ const LandingPage = () => {
 
           {/* Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto py-12 ">
-            <div className="group p-8 border-2 border-border transition-all duration-300 cursor-default rounded-4xl">
+            <div className="group p-8 border-2 border-border transition-all duration-300 cursor-default rounded-4xl ">
               <div className="text-4xl font-bold mb-3">01</div>
               <h3 className="text-lg font-semibold mb-2">Real-Time Meetings</h3>
               <p className="text-sm opacity-70">High-quality video calls with zero latency</p>

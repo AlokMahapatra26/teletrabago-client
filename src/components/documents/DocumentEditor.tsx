@@ -63,18 +63,18 @@ export function DocumentEditor({ document, onTitleChange }: DocumentEditorProps)
   );
     // Debug: Log all WebSocket events
     wsProvider.on('status', (event: any) => {
-      console.log('📡 WebSocket status:', event.status);
+      console.log('WebSocket status:', event.status);
       setConnectionStatus(event.status);
       
       if (event.status === 'connected') {
-        console.log('✓ WebSocket connected successfully!');
+        console.log('WebSocket connected successfully!');
       } else if (event.status === 'disconnected') {
-        console.log('✗ WebSocket disconnected');
+        console.log(' WebSocket disconnected');
       }
     });
 
     wsProvider.on('sync', (isSynced: boolean) => {
-      console.log('🔄 Document synced:', isSynced);
+      console.log(' Document synced:', isSynced);
     });
 
     // Track connected users
@@ -83,7 +83,7 @@ export function DocumentEditor({ document, onTitleChange }: DocumentEditorProps)
       const userCount = states.size;
       setConnectedUsers(userCount);
       
-      console.log('👥 Connected users:', userCount);
+      console.log('Connected users:', userCount);
       console.log('Awareness states:', Array.from(states.entries()).map(([id, state]) => ({
         id,
         user: state.user,
@@ -105,14 +105,14 @@ export function DocumentEditor({ document, onTitleChange }: DocumentEditorProps)
 
     // Debug: Log document updates
     yDoc.on('update', (update: Uint8Array, origin: any) => {
-      console.log('📝 Document updated, origin:', origin === wsProvider ? 'remote' : 'local');
+      console.log('Document updated, origin:', origin === wsProvider ? 'remote' : 'local');
     });
 
     setDoc(yDoc);
     setProvider(wsProvider);
 
     return () => {
-      console.log('🧹 Cleaning up document connection');
+      console.log(' Cleaning up document connection');
       wsProvider.awareness.off('change', updateAwareness);
       wsProvider.awareness.off('update', updateAwareness);
       wsProvider.destroy();
