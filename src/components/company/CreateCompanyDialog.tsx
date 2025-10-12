@@ -12,6 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { apiRequest } from '@/lib/api';
+import { Building } from 'lucide-react';
 
 interface CreateCompanyDialogProps {
   onCompanyCreated: () => void;
@@ -49,7 +50,9 @@ export function CreateCompanyDialog({ onCompanyCreated }: CreateCompanyDialogPro
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Create Company</Button>
+        <Button variant="outline" className='mt-6 cursor-pointer'>
+          <Building/>
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

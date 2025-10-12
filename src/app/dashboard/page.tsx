@@ -22,14 +22,18 @@ import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { apiRequest } from '@/lib/api';
-import { 
-  LayoutDashboard, 
-  MessageSquare, 
-  FileText, 
-  PenTool, 
-  Video 
+import {
+  LayoutDashboard,
+  MessageSquare,
+  FileText,
+  PenTool,
+  Video,
+  Users,
+  LogOut,
+  LogOutIcon
 } from 'lucide-react';
 import { ModeToggle } from '@/components/mode-toggle';
+import Link from 'next/link';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -148,19 +152,19 @@ export default function DashboardPage() {
         <div className="max-w-7xl mx-auto px-8 py-4">
           <div className="flex justify-between items-center">
             <div>
-              
+
               <h1 className="text-2xl font-bold">Teletrabago</h1>
               <p className="text-sm text-muted-foreground">
                 Welcome, {user?.full_name || user?.email}
               </p>
             </div>
             <div className='flex gap-2'>
-              <ModeToggle/>
-              <Button variant="outline" onClick={handleSignOut}>
-              Sign Out
-            </Button>
+              <ModeToggle />
+              <Button variant="destructive" onClick={handleSignOut} className='cursor-pointer'>
+                <LogOutIcon/>
+              </Button>
             </div>
-            
+
           </div>
         </div>
       </header>
@@ -192,10 +196,14 @@ export default function DashboardPage() {
                   </div>
                   {selectedCompany && (
                     <div className="mt-6">
-                      <AddMemberDialog
-                        companyId={selectedCompany}
-                        onMemberAdded={handleMemberAdded}
-                      />
+                      <AddMemberDialog companyId={selectedCompany} onMemberAdded={handleMemberAdded} />
+                      <Link href={`/members?companyId=${selectedCompany}`}>
+
+                        <Button size="sm" variant="outline" className="mt ml-4">
+                          <Users/>
+                        </Button>
+
+                      </Link>
                     </div>
                   )}
                   {selectedCompany && (
@@ -208,19 +216,13 @@ export default function DashboardPage() {
                       />
                     </div>
                   )}
+
+
                 </div>
                 <CreateCompanyDialog onCompanyCreated={handleCompanyCreated} />
               </div>
 
-              {selectedCompany && (
-                <>
-                  <Separator className="my-4" />
-                  <MembersList
-                    companyId={selectedCompany}
-                    refreshTrigger={memberRefreshTrigger}
-                  />
-                </>
-              )}
+
             </Card>
 
             {/* Tabs for Tasks, Chat, Documents, Whiteboards, Meetings */}

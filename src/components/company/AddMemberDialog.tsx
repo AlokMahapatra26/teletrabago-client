@@ -64,9 +64,8 @@ export function AddMemberDialog({ companyId, onMemberAdded }: AddMemberDialogPro
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm">
-          <UserPlus className="h-4 w-4 mr-2" />
-          Add Member
+        <Button size="sm" className='cursor-pointer'>
+          <UserPlus className="h-4 w-4" />
         </Button>
       </DialogTrigger>
       <DialogContent>
