@@ -10,7 +10,7 @@ import { CreateCompanyDialog } from '@/components/company/CreateCompanyDialog';
 import { CompanySelector } from '@/components/company/CompanySelector';
 import { AddMemberDialog } from '@/components/company/AddMemberDialog';
 import { MembersList } from '@/components/company/MembersList';
-import { DeleteCompanyDialog } from '@/components/company/DeleteCompanyDialog';  // Add this
+import { DeleteCompanyDialog } from '@/components/company/DeleteCompanyDialog';
 import { DocumentsList } from '@/components/documents/DocumentsList';
 import { DocumentEditor } from '@/components/documents/DocumentEditor';
 import { WhiteboardsList } from '@/components/whiteboard/WhiteboardList';
@@ -19,20 +19,14 @@ import { CreateMeetingDialog } from '@/components/meetings/CreateMeetingDialog';
 import { MeetingsList } from '@/components/meetings/MeetingsList';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { apiRequest } from '@/lib/api';
 import {
-  LayoutDashboard,
-  MessageSquare,
   FileText,
   PenTool,
-  Video,
-  Users,
-  LogOutIcon
 } from 'lucide-react';
-import { ModeToggle } from '@/components/mode-toggle';
 import Link from 'next/link';
-import SettingsDialogs from '@/components/settings/SettingsDialog';
+import { DashboardSidebar } from '@/components/dashboard/DashboardSidebar';
+import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 export default function DashboardPage() {
   const router = useRouter();
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -46,6 +40,8 @@ export default function DashboardPage() {
   const [selectedDocument, setSelectedDocument] = useState<any>(null);
   const [selectedWhiteboard, setSelectedWhiteboard] = useState<any>(null);
   const [meetingRefreshTrigger, setMeetingRefreshTrigger] = useState(0);
+
+  const [activeTab, setActiveTab] = useState("tasks");
 
   useEffect(() => {
     if (isLoading) return;
@@ -167,199 +163,122 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <header className="border-b border-border bg-background ">
-        <div className="max-w-7xl mx-auto px-8 py-4">
-          <div className="flex justify-between items-center">
-            <div>
+    <div className="flex h-screen overflow-hidden bg-background">
+      <DashboardSidebar
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        companies={companies}
+        selectedCompany={selectedCompany}
+        onSelectCompany={handleSelectCompany}
+        onCompanyCreated={handleCompanyCreated}
+        user={user}
+        onSignOut={handleSignOut}
+      />
 
-              <h1 className="text-2xl font-bold">Teletrabago</h1>
-              <p className="text-sm text-muted-foreground">
-                Welcome, {user?.full_name || user?.email}
+      <main className="flex-1 flex flex-col h-screen overflow-hidden">
+        <DashboardHeader title={activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}>
+          {/* Header Actions */}
+          {activeTab === 'members' && selectedCompany && (
+            <AddMemberDialog companyId={selectedCompany} userRole={userRole} onMemberAdded={handleMemberAdded} />
+          )}
+        </DashboardHeader>
+
+        <div className="flex-1 overflow-y-auto p-6">
+          {companies.length === 0 ? (
+            <Card className="p-8 text-center max-w-md mx-auto mt-10">
+              <h2 className="text-xl font-semibold mb-2">No Companies Yet</h2>
+              <p className="text-muted-foreground mb-4">
+                Create your first company to get started
               </p>
-            </div>
-            <div className='flex gap-2'>
-              <ModeToggle />
-              {/* <SettingsDialogs/> */}
-              <Button variant="destructive" onClick={handleSignOut} className='cursor-pointer'>
-                <LogOutIcon />
-              </Button>
-            </div>
-
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-7xl mx-auto px-8 py-8">
-        {companies.length === 0 ? (
-          <Card className="p-8 text-center">
-            <h2 className="text-xl font-semibold mb-2">No Companies Yet</h2>
-            <p className="text-muted-foreground mb-4">
-              Create your first company to get started
-            </p>
-            <CreateCompanyDialog onCompanyCreated={handleCompanyCreated} />
-          </Card>
-        ) : (
-          <div className="space-y-6">
-            {/* Company Selection */}
-            <Card className="p-4">
-              <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
-                <div className="flex items-center gap-4 flex-wrap">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">
-                      Active Company
-                    </label>
-                    <CompanySelector
-                      companies={companies}
-                      selectedCompany={selectedCompany}
-                      onSelectCompany={handleSelectCompany}
-                    />
-
-                  </div>
-                  {selectedCompany && (
-                    <div className="mt-6">
-                      <AddMemberDialog companyId={selectedCompany} userRole={userRole} onMemberAdded={handleMemberAdded} />
-                      <Link href={`/members?companyId=${selectedCompany}`}>
-
-                        <Button size="sm" variant="outline" className="mt ml-4">
-                          <Users />
-                        </Button>
-
-                      </Link>
-                    </div>
-                  )}
-                  {selectedCompany && (
-                    <div className="mt-6">
-                      <DeleteCompanyDialog
-                        companyId={selectedCompany}
-                        companyName={selectedCompanyName}
-                        userRole={userRole}
-                        onCompanyDeleted={handleCompanyDeleted}
-                      />
-                    </div>
-                  )}
-
-
-                </div>
-                <CreateCompanyDialog onCompanyCreated={handleCompanyCreated} />
-              </div>
-
-
+              <CreateCompanyDialog onCompanyCreated={handleCompanyCreated} />
             </Card>
+          ) : (
+            <>
+              {activeTab === 'tasks' && selectedCompany && (
+                <TaskBoard companyId={selectedCompany} />
+              )}
 
-            {/* Tabs for Tasks, Chat, Documents, Whiteboards, Meetings */}
-            {selectedCompany && (
-              <Tabs defaultValue="tasks" className="space-y-4">
-                <TabsList className="grid w-full max-w-4xl grid-cols-5">
-                  <TabsTrigger value="tasks" className="gap-2">
-                    <LayoutDashboard className="h-4 w-4" />
-                    Tasks
-                  </TabsTrigger>
-                  <TabsTrigger value="chat" className="gap-2">
-                    <MessageSquare className="h-4 w-4" />
-                    Chat
-                  </TabsTrigger>
-                  <TabsTrigger value="documents" className="gap-2">
-                    <FileText className="h-4 w-4" />
-                    Documents
-                  </TabsTrigger>
-                  <TabsTrigger value="whiteboards" className="gap-2">
-                    <PenTool className="h-4 w-4" />
-                    Whiteboards
-                  </TabsTrigger>
-                  <TabsTrigger value="meetings" className="gap-2">
-                    <Video className="h-4 w-4" />
-                    Meetings
-                  </TabsTrigger>
-                </TabsList>
+              {activeTab === 'chat' && selectedCompany && (
+                <CompanyChat companyId={selectedCompany} />
+              )}
 
-                <TabsContent value="tasks">
-                  <TaskBoard companyId={selectedCompany} />
-                </TabsContent>
-
-                <TabsContent value="chat">
-                  <CompanyChat companyId={selectedCompany} />
-                </TabsContent>
-
-                <TabsContent value="documents">
-                  <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-                    <div className="lg:col-span-1">
-                      <DocumentsList
-                        companyId={selectedCompany}
-                        onSelectDocument={setSelectedDocument}
-                        selectedDocumentId={selectedDocument?.id}
-                      />
-                    </div>
-                    <div className="lg:col-span-3">
-                      {selectedDocument ? (
-                        <DocumentEditor
-                          document={selectedDocument}
-                          onTitleChange={(title) => {
-                            setSelectedDocument({ ...selectedDocument, title });
-                          }}
-                        />
-                      ) : (
-                        <Card className="p-8 text-center">
-                          <FileText className="h-12 w-12 mx-auto mb-2 text-muted-foreground" />
-                          <p className="text-muted-foreground">
-                            Select a document or create a new one
-                          </p>
-                        </Card>
-                      )}
-                    </div>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="whiteboards">
-                  <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-                    <div className="lg:col-span-1">
-                      <WhiteboardsList
-                        companyId={selectedCompany}
-                        onSelectWhiteboard={setSelectedWhiteboard}
-                        selectedWhiteboardId={selectedWhiteboard?.id}
-                      />
-                    </div>
-                    <div className="lg:col-span-3">
-                      {selectedWhiteboard ? (
-                        <WhiteboardEditor
-                          whiteboard={selectedWhiteboard}
-                          onTitleChange={(title) => {
-                            setSelectedWhiteboard({ ...selectedWhiteboard, title });
-                          }}
-                        />
-                      ) : (
-                        <Card className="p-8 text-center">
-                          <PenTool className="h-12 w-12 mx-auto mb-2 text-muted-foreground" />
-                          <p className="text-muted-foreground">
-                            Select a whiteboard or create a new one
-                          </p>
-                        </Card>
-                      )}
-                    </div>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="meetings">
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <h2 className="text-2xl font-bold">Meetings</h2>
-                      <CreateMeetingDialog
-                        companyId={selectedCompany}
-                        onMeetingCreated={() => setMeetingRefreshTrigger((prev) => prev + 1)}
-                      />
-                    </div>
-                    <MeetingsList
+              {activeTab === 'documents' && selectedCompany && (
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 h-full">
+                  <div className="lg:col-span-1 h-full overflow-y-auto">
+                    <DocumentsList
                       companyId={selectedCompany}
-                      refreshTrigger={meetingRefreshTrigger}
+                      onSelectDocument={setSelectedDocument}
+                      selectedDocumentId={selectedDocument?.id}
                     />
                   </div>
-                </TabsContent>
-              </Tabs>
-            )}
-          </div>
-        )}
-      </div>
+                  <div className="lg:col-span-3 h-full overflow-y-auto">
+                    {selectedDocument ? (
+                      <DocumentEditor
+                        document={selectedDocument}
+                        onTitleChange={(title) => {
+                          setSelectedDocument({ ...selectedDocument, title });
+                        }}
+                      />
+                    ) : (
+                      <Card className="p-8 text-center h-full flex flex-col items-center justify-center">
+                        <FileText className="h-12 w-12 mx-auto mb-2 text-muted-foreground" />
+                        <p className="text-muted-foreground">
+                          Select a document or create a new one
+                        </p>
+                      </Card>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'whiteboards' && selectedCompany && (
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 h-full">
+                  <div className="lg:col-span-1 h-full overflow-y-auto">
+                    <WhiteboardsList
+                      companyId={selectedCompany}
+                      onSelectWhiteboard={setSelectedWhiteboard}
+                      selectedWhiteboardId={selectedWhiteboard?.id}
+                    />
+                  </div>
+                  <div className="lg:col-span-3 h-full overflow-y-auto">
+                    {selectedWhiteboard ? (
+                      <WhiteboardEditor
+                        whiteboard={selectedWhiteboard}
+                        onTitleChange={(title) => {
+                          setSelectedWhiteboard({ ...selectedWhiteboard, title });
+                        }}
+                      />
+                    ) : (
+                      <Card className="p-8 text-center h-full flex flex-col items-center justify-center">
+                        <PenTool className="h-12 w-12 mx-auto mb-2 text-muted-foreground" />
+                        <p className="text-muted-foreground">
+                          Select a whiteboard or create a new one
+                        </p>
+                      </Card>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'meetings' && selectedCompany && (
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h2 className="text-2xl font-bold">Meetings</h2>
+                    <CreateMeetingDialog
+                      companyId={selectedCompany}
+                      onMeetingCreated={() => setMeetingRefreshTrigger((prev) => prev + 1)}
+                    />
+                  </div>
+                  <MeetingsList
+                    companyId={selectedCompany}
+                    refreshTrigger={meetingRefreshTrigger}
+                  />
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </main>
     </div>
   );
 }

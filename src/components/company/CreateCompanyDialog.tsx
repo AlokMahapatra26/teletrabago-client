@@ -16,9 +16,10 @@ import { Building } from 'lucide-react';
 
 interface CreateCompanyDialogProps {
   onCompanyCreated: () => void;
+  trigger?: React.ReactNode;
 }
 
-export function CreateCompanyDialog({ onCompanyCreated }: CreateCompanyDialogProps) {
+export function CreateCompanyDialog({ onCompanyCreated, trigger }: CreateCompanyDialogProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -50,9 +51,11 @@ export function CreateCompanyDialog({ onCompanyCreated }: CreateCompanyDialogPro
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className='mt-6 cursor-pointer'>
-          Create New Company
-        </Button>
+        {trigger || (
+          <Button variant="outline" className='mt-6 cursor-pointer'>
+            Create New Company
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

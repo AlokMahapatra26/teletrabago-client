@@ -28,7 +28,7 @@ export function CompanySelector({
 }: CompanySelectorProps) {
   return (
     <Select value={selectedCompany || ''} onValueChange={onSelectCompany}>
-      <SelectTrigger className="w-[250px]">
+      <SelectTrigger className="w-full">
         <SelectValue placeholder="Select a company" />
       </SelectTrigger>
       <SelectContent>

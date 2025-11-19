@@ -11,8 +11,8 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Teletrabago | Remote Team Collaboration",
-  description: "Real-time meetings, collaborative editing, and seamless communication for remote teams",
+  title: "Teletrabago | Sync. Create. Flow.",
+  description: "Experience the future of work with Teletrabago. Real-time collaboration, seamless communication, and boundless creativity for remote teams.",
 };
 
 export default function RootLayout({
