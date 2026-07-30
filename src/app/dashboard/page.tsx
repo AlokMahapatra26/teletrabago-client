@@ -275,6 +275,15 @@ export default function DashboardPage() {
                   />
                 </div>
               )}
+
+              {activeTab === 'members' && selectedCompany && (
+                <div className="space-y-4">
+                  <MembersList
+                    companyId={selectedCompany}
+                    refreshTrigger={memberRefreshTrigger}
+                  />
+                </div>
+              )}
             </>
           )}
         </div>

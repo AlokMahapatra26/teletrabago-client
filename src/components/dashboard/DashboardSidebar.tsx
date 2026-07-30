@@ -9,6 +9,7 @@ import {
     FileText,
     PenTool,
     Video,
+    Users,
     Settings,
     LogOut,
     Plus
@@ -49,6 +50,7 @@ export function DashboardSidebar({
         { id: 'documents', label: 'Documents', icon: FileText },
         { id: 'whiteboards', label: 'Whiteboards', icon: PenTool },
         { id: 'meetings', label: 'Meetings', icon: Video },
+        { id: 'members', label: 'Members', icon: Users },
     ];
 
     return (
